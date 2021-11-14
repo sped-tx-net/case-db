@@ -1,0 +1,22 @@
+﻿CREATE TABLE [dbo].[CFDocument]
+(
+	[Id] UNIQUEIDENTIFIER NOT NULL,   
+    [Creator] VARCHAR(200) NOT NULL,
+    [Title] VARCHAR(200) NOT NULL,
+    [LastChangeDateTime] SMALLDATETIME NOT NULL,
+    [OfficialSourceURL] VARCHAR(200) NULL,        
+    [Publisher] VARCHAR(200) NULL,
+    [Description] VARCHAR(200) NULL,
+    [Subject] VARCHAR(200) NULL,
+    [SubjectId] UNIQUEIDENTIFIER NULL,
+    [Language] VARCHAR(200) NULL, 
+    [Version] VARCHAR(200) NULL, 
+    [AdoptionStatus] VARCHAR(200) NULL,   
+    [StatusStartDate] DATE NULL, 
+    [StatusEndDate] DATE NULL,
+    [LicenseId] UNIQUEIDENTIFIER NULL,
+    [Notes] VARCHAR(MAX) NULL,    
+    CONSTRAINT [PK_CFDocument_Id] PRIMARY KEY NONCLUSTERED([Id]),
+    CONSTRAINT [FK_CFDocument_SubjectId] FOREIGN KEY ([SubjectId]) REFERENCES [CFSubject]([Id]),
+    CONSTRAINT [FK_CFDocument_LicenseId] FOREIGN KEY ([LicenseId]) REFERENCES [CFLicense]([Id]),
+)

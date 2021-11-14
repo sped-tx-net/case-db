@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="ec04a66e-1cc1-437c-8793-c2d50a7c0ed0" ChangeDateTime="11/14/2021 15:11:29">
+    <Property Name="ElementName" Value="[dbo].[CFAssociation].[DestinationNode]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[CFAssociation]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="DestinationNodeId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="18359bcf-f537-4cde-9676-e2f9a6523088" ChangeDateTime="11/14/2021 17:27:02">
+    <Property Name="ElementName" Value="[dbo].[CFLicense].[Text]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[CFLicense]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="LicenseText" />
+  </Operation>
+</Operations>

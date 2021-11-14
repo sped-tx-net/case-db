@@ -1,0 +1,9 @@
+﻿CREATE TABLE [dbo].[CFLicense]
+(
+	[Id] UNIQUEIDENTIFIER NOT NULL,
+    [Title] VARCHAR(200) NOT NULL, 
+    [Description] VARCHAR(200) NULL,
+    [LicenseText] VARCHAR(MAX) NOT NULL,
+    [LastChangeDateTime] SMALLDATETIME NOT NULL,
+    CONSTRAINT [PK_CFLicense_Id] PRIMARY KEY NONCLUSTERED([Id])
+)

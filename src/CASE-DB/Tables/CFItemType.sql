@@ -1,0 +1,10 @@
+﻿CREATE TABLE [dbo].[CFItemType]
+(
+	[Id] UNIQUEIDENTIFIER NOT NULL,
+    [Title] VARCHAR(200) NOT NULL, 
+    [HierarchyCode] VARCHAR(200) NOT NULL, 
+    [Description] VARCHAR(200) NOT NULL,
+    [TypeCode] VARCHAR(200) NULL,
+    [LastChangeDateTime] SMALLDATETIME NOT NULL, 
+    CONSTRAINT [PK_CFItemType_Id] PRIMARY KEY NONCLUSTERED([Id])
+)

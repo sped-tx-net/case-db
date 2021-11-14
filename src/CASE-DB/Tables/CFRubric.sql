@@ -1,0 +1,8 @@
+﻿CREATE TABLE [dbo].[CFRubric]
+(
+	[Id] UNIQUEIDENTIFIER NOT NULL,
+    [Title] VARCHAR(200) NULL, 
+    [Description] VARCHAR(200) NULL,
+    [LastChangeDateTime] SMALLDATETIME NOT NULL,
+    CONSTRAINT [PK_CFRubric_Id] PRIMARY KEY NONCLUSTERED([Id])
+)

@@ -1,0 +1,10 @@
+﻿CREATE TABLE [dbo].[CFConcept]
+(
+	[Id] UNIQUEIDENTIFIER NOT NULL,
+    [Title] VARCHAR(200) NOT NULL, 
+    [Keywords] VARCHAR(200) NULL,
+    [HierarchyCode] VARCHAR(200) NOT NULL,
+    [Description] VARCHAR(200) NULL,
+    [LastChangeDateTime] SMALLDATETIME NOT NULL,
+    CONSTRAINT [PK_CFConcept_Id] PRIMARY KEY NONCLUSTERED([Id])
+)
