@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Ims.Case.Client\Ims.Case.Client.csproj" />
+    <ProjectReference Include="..\Ims.Case.Client\Ims.Case.Client.csproj" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
   </ItemGroup>
 

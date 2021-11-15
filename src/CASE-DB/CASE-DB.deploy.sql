@@ -552,18 +552,6 @@ ALTER TABLE [dbo].[CFRubricCriterionLevel]
 
 
 GO
-PRINT N'Creating Check Constraint [dbo].[CHK_CFAssociation_AssociationType]...';
-
-
-GO
-ALTER TABLE [dbo].[CFAssociation]
-    ADD CONSTRAINT [CHK_CFAssociation_AssociationType] CHECK ([AssociationType] IN
-                ('isChildOf','isPeerOf','isPartOf',
-                 'exactMatchOf','precedes','isRelatedTo',
-                 'replacedBy','exemplar','hasSkillLevel'));
-
-
-GO
 PRINT N'Creating Trigger [dbo].[TGR_CFAssociation_Update]...';
 
 

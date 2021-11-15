@@ -25,11 +25,14 @@ namespace ConsoleTester
 
         public void Clear()
         {
-            DeleteData("CFDocument");
             DeleteData("CFAssociation");
             DeleteData("CFItem");
+            DeleteData("CFDocument");
             DeleteData("CFSubject");
             DeleteData("CFItemType");
+            DeleteData("CFLicense");
+            
+
 
         }
 
@@ -45,6 +48,7 @@ namespace ConsoleTester
                 {
                     command.Connection = connection;
                     command.CommandText = $"DELETE FROM dbo.{tableName}";
+
                     adapter.DeleteCommand = command;
                     adapter.DeleteCommand.ExecuteNonQuery();
                 }
@@ -62,38 +66,52 @@ namespace ConsoleTester
                 {
                     command.Connection = connection;
                     command.CommandText =
-                        "INSERT INTO dbo.CFItem VALUES (@Id,@DocumentId,@ItemTypeId,@FullStatement,@AlternativeLabel," +
-                        "@HumanCodingScheme,@ListEnumeration,@AbbreviatedStatement,@Language," +
-                        "@StatusStartDate,@StatusEndDate,@LastChangeDateTime,@Notes)";
+                        "INSERT INTO dbo.CFItem VALUES (@Id,@FullStatement,@AlternativeLabel,@CFItemType,@HumanCodingScheme," +
+                        "@ListEnumeration,@AbbreviatedStatement,@ConceptKeywords,@ConceptKeywordsId,@Notes,@Language,@EducationLevel," +
+                        "@CFItemTypeId,@LicenseId,@StatusStartDate,@StatusEndDate,@LastChangeDateTime,@CFDocumentId)";
 
                     command.Parameters.AddWithValue("@Id", item.Identifier);
-                    command.Parameters.AddWithValue("@DocumentId", documentId);
-                    command.Parameters.AddWithValue("@ItemTypeId", item.CFItemTypeURI.Identifier);
                     command.Parameters.AddWithValue("@FullStatement", item.FullStatement);
                     command.Parameters.AddWithValue("@AlternativeLabel", item.AlternativeLabel);
+                    command.Parameters.AddWithValue("@CFItemType", item.CFItemType);
                     command.Parameters.AddWithValue("@HumanCodingScheme", item.HumanCodingScheme);
                     command.Parameters.AddWithValue("@ListEnumeration", item.ListEnumeration);
                     command.Parameters.AddWithValue("@AbbreviatedStatement", item.AbbreviatedStatement);
+                    command.Parameters.AddWithValue("@ConceptKeywords", item.ConceptKeywords);
+                    command.Parameters.AddWithValue("@ConceptKeywordsId", item.ConceptKeywordsURI?.Identifier);
+                    command.Parameters.AddWithValue("@Notes", item.Notes);
                     command.Parameters.AddWithValue("@Language", item.Language);
+                    command.Parameters.AddWithValue("@EducationLevel", item.EducationLevel);
+                    command.Parameters.AddWithValue("@CFItemTypeId", item.CFItemTypeURI?.Identifier);
+                    command.Parameters.AddWithValue("@LicenseId", item.LicenseURI?.Identifier);
                     command.Parameters.AddWithValue("@StatusStartDate", item.StatusStartDate);
                     command.Parameters.AddWithValue("@StatusEndDate", item.StatusEndDate) ;
                     command.Parameters.AddWithValue("@LastChangeDateTime", item.LastChangeDateTime);
-                    command.Parameters.AddWithValue("@Notes", item.Notes);
+                    command.Parameters.AddWithValue("@CFDocumentId", documentId);
 
                     command.SetNull();
 
-                    adapter.InsertCommand = command;
-                    adapter.InsertCommand.ExecuteNonQuery();
+                    try
+                    {
+                        adapter.InsertCommand = command;
+                        adapter.InsertCommand.ExecuteNonQuery();
+                    }
+                    catch (SqlException ex)
+                    {
+                        //Console.ForegroundColor = ConsoleColor.Red;
+                        //Logger.Log(ex.Message);
+                        //Console.ResetColor();
+                    }
                 }
 
                 connection.Close();
             }
 
-            Logger.Log($"Inserted CFItem '{item.HumanCodingScheme}'");
+            Logger.Log($"Inserted CFItem {item.HumanCodingScheme} {item.CFItemType}");
         }
 
 
-        public void InsertAssociation(CFPckgAssociation association)
+        public void InsertAssociation(CFPckgAssociation association, string documentId)
         {
             using (SqlConnection connection = CreateConnection())
             using (SqlDataAdapter adapter = new SqlDataAdapter())
@@ -104,25 +122,37 @@ namespace ConsoleTester
                 {
                     command.Connection = connection;
                     command.CommandText =
-                        "INSERT INTO dbo.CFAssociation VALUES (@Id,@AssociationType,@SequenceNumber,@OriginNodeId,@DestinationNodeId,@LastChangeDateTime)";
+                        "INSERT INTO dbo.CFAssociation VALUES (@Id,@AssociationType,@SequenceNumber,@OriginNodeId,@DestinationNodeId,@CFAssociationGroupingId,@LastChangeDateTime,@CFDocumentId)";
 
                     command.Parameters.AddWithValue("@Id", association.Identifier);
                     command.Parameters.AddWithValue("@AssociationType", association.AssociationType);
                     command.Parameters.AddWithValue("@SequenceNumber", association.SequenceNumber);
                     command.Parameters.AddWithValue("@OriginNodeId", association.OriginNodeURI.Identifier);
                     command.Parameters.AddWithValue("@DestinationNodeId", association.DestinationNodeURI.Identifier);
+                    command.Parameters.AddWithValue("@CFAssociationGroupingId", association.CFAssociationGroupingURI?.Identifier);
                     command.Parameters.AddWithValue("@LastChangeDateTime", association.LastChangeDateTime);
+                    command.Parameters.AddWithValue("@CFDocumentId", documentId);
 
                     command.SetNull();
 
-                    adapter.InsertCommand = command;
-                    adapter.InsertCommand.ExecuteNonQuery();
+                    try
+                    {
+                        adapter.InsertCommand = command;
+                        adapter.InsertCommand.ExecuteNonQuery();
+                    }
+                    catch(SqlException ex)
+                    {
+                        //Console.ForegroundColor = ConsoleColor.Red;
+                        //Logger.Log(ex.Message);
+                        //Console.ResetColor();
+                    }
+                   
                 }
 
                 connection.Close();
             }
 
-            Logger.Log($"Inserted CFAssociation '{association.Identifier}' with type '{association.AssociationType}'");
+            Logger.Log($"Inserted CFAssociation {association.AssociationType}('{association.OriginNodeURI.Title}' --> '{association.DestinationNodeURI.Title}')'");
         }
 
         public void InsertItemType(CFItemType itemType)
@@ -142,15 +172,22 @@ namespace ConsoleTester
                     command.Parameters.AddWithValue("@Title", itemType.Title);
                     command.Parameters.AddWithValue("@Description", itemType.Description);
                     command.Parameters.AddWithValue("@HierarchyCode", itemType.HierarchyCode);
-
                     command.Parameters.AddWithValue("@TypeCode", itemType.TypeCode);
-
                     command.Parameters.AddWithValue("@LastChangeDateTime", itemType.LastChangeDateTime);
 
                     command.SetNull();
 
-                    adapter.InsertCommand = command;
-                    adapter.InsertCommand.ExecuteNonQuery();
+                    try
+                    {
+                        adapter.InsertCommand = command;
+                        adapter.InsertCommand.ExecuteNonQuery();
+                    }
+                    catch (SqlException ex)
+                    {
+                        //Console.ForegroundColor = ConsoleColor.Red;
+                        //Logger.Log(ex.Message);
+                        //Console.ResetColor();
+                    }
                 }
 
                 connection.Close();
@@ -180,8 +217,17 @@ namespace ConsoleTester
 
                     command.SetNull();
 
-                    adapter.InsertCommand = command;
-                    adapter.InsertCommand.ExecuteNonQuery();
+                    try
+                    {
+                        adapter.InsertCommand = command;
+                        adapter.InsertCommand.ExecuteNonQuery();
+                    }
+                    catch (SqlException ex)
+                    {
+                        //Console.ForegroundColor = ConsoleColor.Red;
+                        //Logger.Log(ex.Message);
+                        //Console.ResetColor();
+                    }
                 }
 
                 connection.Close();
@@ -203,29 +249,39 @@ namespace ConsoleTester
                     command.Connection = connection;
                     command.CommandText =
                         "INSERT INTO dbo.CFDocument VALUES " +
-                        "(@Id,@SubjectId,@LicenseId,@Creator,@OfficialSourceURL,@Title,@Publisher,@Description,@Version,@AdoptionStatus,@Language," +
-                        "@StatusStartDate,@StatusEndDate,@LastChangeDateTime,@Notes)";
+                        "(@Id,@Creator,@Title,@LastChangeDateTime,@OfficialSourceURL,@Publisher,@Description,@Subject,@SubjectId,@Language,@Version," +
+                        "@AdoptionStatus,@StatusStartDate,@StatusEndDate,@LicenseId,@Notes)";
 
                     command.Parameters.AddWithValue("@Id", document.Identifier);
-                    command.Parameters.AddWithValue("@SubjectId", document.SubjectURI[0].Identifier);
-                    command.Parameters.AddWithValue("@LicenseId", null);
                     command.Parameters.AddWithValue("@Creator", document.Creator);
-                    command.Parameters.AddWithValue("@OfficialSourceURL", document.OfficialSourceURL);
                     command.Parameters.AddWithValue("@Title", document.Title);
+                    command.Parameters.AddWithValue("@LastChangeDateTime", document.LastChangeDateTime);
+                    command.Parameters.AddWithValue("@OfficialSourceURL", document.OfficialSourceURL);
                     command.Parameters.AddWithValue("@Publisher", document.Publisher);
                     command.Parameters.AddWithValue("@Description", document.Description);
+                    command.Parameters.AddWithValue("@Subject", document.SubjectURI[0]?.Title);
+                    command.Parameters.AddWithValue("@SubjectId", document.SubjectURI[0]?.Identifier);
+                    command.Parameters.AddWithValue("@Language", document.Language);
                     command.Parameters.AddWithValue("@Version", document.Version);
                     command.Parameters.AddWithValue("@AdoptionStatus", document.AdoptionStatus);
-                    command.Parameters.AddWithValue("@Language", document.Language);
                     command.Parameters.AddWithValue("@StatusStartDate", document.StatusStartDate);
                     command.Parameters.AddWithValue("@StatusEndDate", document.StatusEndDate);
-                    command.Parameters.AddWithValue("@LastChangeDateTime", document.LastChangeDateTime);
+                    command.Parameters.AddWithValue("@LicenseId", null);
                     command.Parameters.AddWithValue("@Notes", document.Notes);
 
                     command.SetNull();
 
-                    adapter.InsertCommand = command;
-                    adapter.InsertCommand.ExecuteNonQuery();
+                    try
+                    {
+                        adapter.InsertCommand = command;
+                        adapter.InsertCommand.ExecuteNonQuery();
+                    }
+                    catch (SqlException ex)
+                    {
+                        //Console.ForegroundColor = ConsoleColor.Red;
+                        //Logger.Log(ex.Message);
+                        //Console.ResetColor();
+                    }
                 }
 
                 connection.Close();
@@ -233,34 +289,5 @@ namespace ConsoleTester
 
             Logger.Log($"Inserted CFDocument '{document.Title}'");
         }
-    }
-
-    internal static class SqlCommandExtensions
-    {
-        public static void SetNull(this SqlCommand source)
-        {
-            foreach (SqlParameter parameter in source.Parameters)
-            {
-                if (parameter.Value == null)
-                    parameter.Value = DBNull.Value;
-            }
-        }
-    }
-
-
-    public class DocumentPackage
-    {
-        public DocumentPackage(CFPackage package)
-        {
-            Items = package.CFItems;
-            Document = package.CFDocument;
-            Associations = package.CFAssociations;
-        }
-
-        public CFPckgDocument Document { get; set; }
-
-        public List<CFPckgItem> Items { get; set; }
-
-        public List<CFPckgAssociation> Associations { get; set; }
     }
 }

@@ -11,10 +11,10 @@
     CONSTRAINT [PK_CFAssociation_Id] PRIMARY KEY NONCLUSTERED([Id]),
     CONSTRAINT [FK_CFAssociation_CFAssociationGroupingId] FOREIGN KEY ([CFAssociationGroupingId]) REFERENCES [CFAssociationGrouping]([Id]),
     CONSTRAINT [FK_CFAssociation_CFDocumentId] FOREIGN KEY ([CFDocumentId]) REFERENCES [CFDocument]([Id]),
-    CONSTRAINT [CHK_CFAssociation_AssociationType]
-        CHECK ([AssociationType] IN
-                ('isChildOf','isPeerOf','isPartOf',
-                 'exactMatchOf','precedes','isRelatedTo',
-                 'replacedBy','exemplar','hasSkillLevel')),
+    --CONSTRAINT [CHK_CFAssociation_AssociationType]
+    --    CHECK ([AssociationType] IN
+    --            ('isChildOf','isPeerOf','isPartOf',
+    --             'exactMatchOf','precedes','isRelatedTo',
+    --             'replacedBy','exemplar','hasSkillLevel')),
     
 )

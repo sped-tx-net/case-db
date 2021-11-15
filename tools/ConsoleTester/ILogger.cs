@@ -10,7 +10,7 @@ namespace ConsoleTester
     {
         public static void Log(string text)
         {
-            Console.WriteLine(text);
+           Console.WriteLine(text);
         }
     }
 }
