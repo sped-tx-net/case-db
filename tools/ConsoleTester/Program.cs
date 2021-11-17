@@ -42,22 +42,18 @@ namespace ConsoleTester
             int total = Process(manager, documents, subjects, itemTypes, documentPackages);
             int current = 0;
 
-            var progressBar = new ProgressBar();
-
-            progressBar.Report(current);
-
             foreach (var subject in subjects)
             {
                 current++;
                 database.InsertSubject(subject);
-                ReportProgress(total, current, progressBar);
+                Logger.Log($"{current,6} of {total,6}: Inserted CFSubject '{subject.Title}'");
             }
 
             foreach (var itemType in itemTypes)
             {
                 current++;
                 database.InsertItemType(itemType);
-                ReportProgress(total, current, progressBar);
+                Logger.Log($"{current,6} of {total,6}: Inserted CFItemType '{itemType.Title}'");
             }
 
             foreach (var documentPackage in documentPackages)
@@ -66,20 +62,20 @@ namespace ConsoleTester
 
                 current++;
                 database.InsertDocument(document);
-                ReportProgress(total, current, progressBar);
+                Logger.Log($"{current,6} of {total,6}: Inserted CFDocument '{document.Title}'");
 
                 foreach (var association in documentPackage.Associations)
                 {
                     current++;
                     database.InsertAssociation(association, document.Identifier);
-                    ReportProgress(total, current, progressBar);
+                    Logger.Log($"{current,6} of {total,6}: Inserted CFAssociation '{association.Identifier}'");
                 }
 
                 foreach (var item in documentPackage.Items)
                 {
                     current++;
                     database.InsertItem(item, document.Identifier);
-                    ReportProgress(total, current, progressBar);
+                    Logger.Log($"{current,6} of {total,6}: Inserted CFItem '{item.HumanCodingScheme}'");
                 }
             }
 
@@ -96,7 +92,7 @@ namespace ConsoleTester
 
         private static void ReportProgress(int total, int current, ProgressBar progressBar)
         {
-            double report = (current / total) * 100;
+            double report = (current / total);
             progressBar.Report(report);
         }
 

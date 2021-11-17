@@ -107,7 +107,7 @@ namespace ConsoleTester
                 connection.Close();
             }
 
-            Logger.Log($"Inserted CFItem {item.HumanCodingScheme} {item.CFItemType}");
+            //Logger.Log($"Inserted CFItem {item.HumanCodingScheme} {item.CFItemType}");
         }
 
 
@@ -122,13 +122,15 @@ namespace ConsoleTester
                 {
                     command.Connection = connection;
                     command.CommandText =
-                        "INSERT INTO dbo.CFAssociation VALUES (@Id,@AssociationType,@SequenceNumber,@OriginNodeId,@DestinationNodeId,@CFAssociationGroupingId,@LastChangeDateTime,@CFDocumentId)";
+                        "INSERT INTO dbo.CFAssociation VALUES (@Id,@AssociationType,@SequenceNumber,@OriginNodeId,@OriginNodeTitle,@DestinationNodeId,@DestinationNodeTitle,@CFAssociationGroupingId,@LastChangeDateTime,@CFDocumentId)";
 
                     command.Parameters.AddWithValue("@Id", association.Identifier);
-                    command.Parameters.AddWithValue("@AssociationType", association.AssociationType);
+                    command.Parameters.AddWithValue("@AssociationType", association.AssociationType.ToString());
                     command.Parameters.AddWithValue("@SequenceNumber", association.SequenceNumber);
                     command.Parameters.AddWithValue("@OriginNodeId", association.OriginNodeURI.Identifier);
+                    command.Parameters.AddWithValue("@OriginNodeTitle", association.OriginNodeURI.Title);
                     command.Parameters.AddWithValue("@DestinationNodeId", association.DestinationNodeURI.Identifier);
+                    command.Parameters.AddWithValue("@DestinationNodeTitle", association.DestinationNodeURI.Title);
                     command.Parameters.AddWithValue("@CFAssociationGroupingId", association.CFAssociationGroupingURI?.Identifier);
                     command.Parameters.AddWithValue("@LastChangeDateTime", association.LastChangeDateTime);
                     command.Parameters.AddWithValue("@CFDocumentId", documentId);
@@ -152,7 +154,7 @@ namespace ConsoleTester
                 connection.Close();
             }
 
-            Logger.Log($"Inserted CFAssociation {association.AssociationType}('{association.OriginNodeURI.Title}' --> '{association.DestinationNodeURI.Title}')'");
+            //Logger.Log($"Inserted CFAssociation {association.AssociationType}('{association.OriginNodeURI.Title}' --> '{association.DestinationNodeURI.Title}')'");
         }
 
         public void InsertItemType(CFItemType itemType)
@@ -193,7 +195,7 @@ namespace ConsoleTester
                 connection.Close();
             }
 
-            Logger.Log($"Inserted CFItemType '{itemType.Title}'");
+            //Logger.Log($"Inserted CFItemType '{itemType.Title}'");
         }
 
         public void InsertSubject(CFSubject subject)
@@ -233,7 +235,7 @@ namespace ConsoleTester
                 connection.Close();
             }
 
-            Logger.Log($"Inserted CFSubject '{subject.Title}'");
+            //Logger.Log($"Inserted CFSubject '{subject.Title}'");
         }
 
 
@@ -287,7 +289,7 @@ namespace ConsoleTester
                 connection.Close();
             }
 
-            Logger.Log($"Inserted CFDocument '{document.Title}'");
+            //Logger.Log($"Inserted CFDocument '{document.Title}'");
         }
     }
 }
